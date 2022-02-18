@@ -1,0 +1,226 @@
+<h1>User Input Form</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-7">
+    <div class="list-group">
+      <form #postForm="ngForm" (ngSubmit)="onCreatePost(postForm.value)">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            required
+            ngModel
+            name="firstName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            required
+            ngModel
+            name="lastName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input
+            type="text"
+            class="form-control"
+            id="age"
+            required
+            ngModel
+            name="age"
+          />
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <input
+            type="text"
+            class="form-control"
+            id="gender"
+            required
+            ngModel
+            name="gender"
+          />
+        </div>
+        <div class="form-group">
+          <label for="hobbies">Hobbies</label>
+          <textarea
+            class="form-control"
+            id="hobbies"
+            required
+            ngModel
+            name="hobbies"
+          ></textarea>
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!postForm.valid"
+        >
+          Submit Form
+        </button>
+      </form>
+      <hr>
+      <div>
+        
+      </div>
+      <button class="btn btn-primary" (click)="onFetchPosts()">
+        Show All Users
+      </button>
+
+      |<button class="btn btn-primary" (click)="fetchBox()">
+        Search User by ID
+      </button>
+      <div class="form-group" *ngIf="fetchSingle">
+        <label for="title">User Unique ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fetchid"
+          required
+          ngModel
+          name="fetchid"
+          #fetchid
+        />
+        <hr>
+        <button class="btn btn-primary" (click)="getSinglePost(fetchid)">Search</button> 
+      </div>
+      <hr>
+
+      <button
+        class="btn btn-danger"
+        [disabled]="loadedPosts.length < 1"
+        (click)="onClearPosts()"
+      >
+        Clear All USers
+      </button>
+      |<button class="btn btn-success" (click)="updatebox()">
+        Edit User Details
+      </button>
+      <hr>
+      <div class="form-group" *ngIf="update">
+        <div class="form-group">
+          <label for="id">User Unique ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="id"
+            required
+            ngModel
+            name="id"
+            #postid
+          />
+        </div>
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            required
+            ngModel
+            name="firstName"
+            #FirstName
+          />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            required
+            ngModel
+            name="lastName"
+            #LastName
+          />
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input
+            type="text"
+            class="form-control"
+            id="age"
+            required
+            ngModel
+            name="age"
+            #Age
+          />
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <input
+            type="text"
+            class="form-control"
+            id="gender"
+            required
+            ngModel
+            name="gender"
+            #Gender
+          />
+        </div>
+        <div class="form-group">
+          <label for="hobbies">Hobbies</label>
+          <textarea
+            class="form-control"
+            id="hobbies"
+            required
+            ngModel
+            name="hobbies"
+            #Hobbies
+          ></textarea>
+        </div>
+        <button class="btn btn-primary" (click)="updateSinglePost(postid,FirstName,LastName,Age,Gender,Hobbies)">Submit Update</button>
+      </div>
+    </div>
+    <div *ngIf="singlePost">
+      <h2>User Details</h2>
+      <h3>{{singleFirstName}}</h3>
+      <h3>{{singleLastName}}</h3>
+      <h3>{{singleAge}}</h3>
+      <h3>{{singleGender}}</h3>
+      <h3>{{singlehobbies}}</h3>
+      <button class="btn btn-danger" (click)="close()">Close</button>
+    </div>
+    <hr>
+      <div>
+        <p *ngIf="loadedPosts.length < 1 && !isFetching">No Users Available</p>
+        <ul class="list-group" *ngIf="loadedPosts.length >= 1 && !isFetching">
+          <li class="list-group-item" *ngFor = "let post of loadedPosts">
+            <h1>
+              <a [routerLink] = "['/users',post.firstName,post.lastName,post.age,post.gender,post.id]"
+              href="#"
+              class="list-group-item">
+              {{post.firstName}}
+              </a>
+              </h1>
+            <!--<h1>{{post.lastName}}</h1>
+            <h2>{{post.age}}</h2>
+            <h1>{{post.gender}}</h1>
+            <h2>{{post.hobbies}}</h2>
+            <h3>Post ID: "{{post.id}}"</h3> -->
+            <h4 #postid>{{post.id}}</h4>   
+              <button class="btn btn-danger" (click)="deleteSinglePost(postid)">
+                Delete User
+              </button>
+          </li>
+        </ul>
+        <p *ngIf = "isFetching">Loading...</p>    
+      </div>
+    
+  </div>
+  
+  <div class="col-xs-12 col-sm-5">
+    <!--<app-user></app-user>-->
+    <router-outlet></router-outlet>
+  </div>
+  
+  
+</div>
+
+
